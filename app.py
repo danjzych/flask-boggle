@@ -31,7 +31,18 @@ def new_game():
 @app.post('/api/score-word')
 def score_word():
     data = request.json
+    gameboard = games[data['gameId']]
+    word = data['word']
 
-    print(data)
+    if not gameboard.is_word_in_word_list(word):
+        return jsonify({ 'result': 'not-word'})
+    elif not gameboard.check_word_on_board(word):
+        return jsonify({ 'result': 'not-on-board'})
+    else:
+        return jsonify({ 'result': 'ok'})
+
+    print("data from api", data)
+    print("games dict", games)
+
     # breakpoint()
 
