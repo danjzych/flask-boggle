@@ -48,11 +48,9 @@ class BoggleAppTestCase(TestCase):
         """Test if word is valid"""
 
         with self.client as client:
-            # response = client.post('/api/score-word',
-            #                        data = {'gameId': '1', 'word': 'ZUZ'})
-
             # make a post request to /api/new-game
             new_game_response = client.post('/api/new-game')
+
             # get the response body as json using .get_json()
             data = new_game_response.get_json()
 
@@ -66,16 +64,18 @@ class BoggleAppTestCase(TestCase):
                             ['E', 'E', 'U', 'I', 'R'],
                             ['S', 'E', 'S', 'A', 'M']]
 
+            print("!!!!!!!!!! GAME ID EXIST? ", data['gameId'])
+
             # test to see that a valid word on the altered board returns {'result': 'ok'}
             valid_word_response = client.post('/api/score-word',
-                                              data={
+                                              json = {
                                                   "gameId": data['gameId'],
                                                   "word": "SEE"
                                               })
-            valid_word_data = valid_word_response.get_json()
-            print('!!!!!!!!!!!!', valid_word_data)
 
-            self.assertEqual(valid_word_data, {'result', 'ok'})
+            valid_word_data = valid_word_response.get_json()
+
+            self.assertEqual(valid_word_data, {'result': 'ok'})
 
             # test to see that a valid word not on the altered board returns {'result': 'not-on-board'}
             # test to see that an invalid word returns {'result': 'not-word'}
