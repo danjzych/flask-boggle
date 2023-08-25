@@ -52,21 +52,30 @@ class BoggleAppTestCase(TestCase):
             #                        data = {'gameId': '1', 'word': 'ZUZ'})
 
             # make a post request to /api/new-game
-            response = client.post('/api/new-game')
+            new_game_response = client.post('/api/new-game')
             # get the response body as json using .get_json()
-            data = response.get_json()
+            data = new_game_response.get_json()
 
             # find that game in the dictionary of games (imported from app.py above)
-            game = games[data['gamesId']]
+            game = games[data['gameId']]
 
             # manually change the game board's rows so they are not random
-            game['board'] = [['A', 'B', 'T', 'G', 'V'],
+            game.board = [['A', 'B', 'T', 'G', 'V'],
                             ['R', 'D', 'E', 'Y', 'N'],
                             ['E', 'B', 'E', 'E', 'E'],
                             ['E', 'E', 'U', 'I', 'R'],
                             ['S', 'E', 'S', 'A', 'M']]
 
             # test to see that a valid word on the altered board returns {'result': 'ok'}
-            self.
+            valid_word_response = client.post('/api/score-word',
+                                              data={
+                                                  "gameId": data['gameId'],
+                                                  "word": "SEE"
+                                              })
+            valid_word_data = valid_word_response.get_json()
+            print('!!!!!!!!!!!!', valid_word_data)
+
+            self.assertEqual(valid_word_data, {'result', 'ok'})
+
             # test to see that a valid word not on the altered board returns {'result': 'not-on-board'}
             # test to see that an invalid word returns {'result': 'not-word'}
