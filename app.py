@@ -41,5 +41,5 @@ def score_word():
     elif not current_game.check_word_on_board(word):
         return jsonify({ 'result': 'not-on-board'})
     else:
-        #invoke playing on scorebaord
+        current_game.play_and_score_word(word)
         return jsonify({ 'result': 'ok'})

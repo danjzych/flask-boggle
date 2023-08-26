@@ -12,6 +12,8 @@ let gameId;
 /** Start */
 
 async function start() {
+  console.debug('start');
+
   const response = await fetch(`/api/new-game`, {
     method: "POST",
   });
@@ -26,6 +28,8 @@ async function start() {
 /** Display board */
 
 function displayBoard(board) {
+  console.debug('displayBoard');
+
   $table.empty();
 
   // loop over board and create the DOM tr/td structure
@@ -50,19 +54,30 @@ function displayBoard(board) {
 
 /** Submit word to API */
 async function submitWord(evt) {
+  console.debug('submitWord')
   evt.preventDefault();
+
+  const word = $(evt.target).prev().val()
 
   const response = await fetch('/api/score-word', {
     method: "POST",
-    body: JSON.stringify({ "gameId": `${gameId}`, "word": $(evt.target).val() }),
+    body: JSON.stringify({ "gameId": `${gameId}`, "word": `${word}`}),
     headers: {
       "content-type": "application/json"
     }
   });
 
   const result = await response.json();
+
+  //implement scoring
+  if (result.response === 'ok') {
+    //add word to bulleted list of words on DOM
+  } else {
+    //give player warning
+  }
 }
 
-$form.on("submit", ".word-input-btn", submitWord);
 
 start();
+
+$form.on("click", ".word-input-btn", submitWord);
